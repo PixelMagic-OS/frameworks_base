@@ -962,6 +962,8 @@ public class DisplayModeDirector {
                 Settings.Global.getUriFor(Settings.Global.LOW_POWER_MODE);
         private final Uri mMatchContentFrameRateSetting =
                 Settings.Secure.getUriFor(Settings.Secure.MATCH_CONTENT_FRAME_RATE);
+        private final Uri mLowPowerRefreshRateSetting =
+                Settings.System.getUriFor(Settings.System.LOW_POWER_REFRESH_RATE);
 
         private final boolean mVsyncLowPowerVoteEnabled;
         private final boolean mPeakRefreshRatePhysicalLimitEnabled;
@@ -1029,6 +1031,8 @@ public class DisplayModeDirector {
             final ContentResolver cr = mContext.getContentResolver();
             mInjector.registerPeakRefreshRateObserver(cr, this);
             mInjector.registerMinRefreshRateObserver(cr, this);
+            cr.registerContentObserver(mLowPowerModeSetting, false /*notifyDescendants*/, this,
+                    UserHandle.USER_ALL);
             cr.registerContentObserver(mLowPowerModeSetting, /* notifyDescendants= */ false, this,
                     UserHandle.USER_ALL);
             cr.registerContentObserver(mMatchContentFrameRateSetting,
@@ -1073,7 +1077,8 @@ public class DisplayModeDirector {
             synchronized (mLock) {
                 if (mPeakRefreshRateSetting.equals(uri) || mMinRefreshRateSetting.equals(uri)) {
                     updateRefreshRateSettingLocked();
-                } else if (mLowPowerModeSetting.equals(uri)) {
+                } else if (mLowPowerModeSetting.equals(uri)
+                        || mLowPowerRefreshRateSetting.equals(uri)) {
                     updateLowPowerModeSettingLocked();
                 } else if (mMatchContentFrameRateSetting.equals(uri)) {
                     updateModeSwitchingTypeSettingLocked();
@@ -1115,8 +1120,10 @@ public class DisplayModeDirector {
         private void updateLowPowerModeSettingLocked() {
             mIsLowPower = Settings.Global.getInt(mContext.getContentResolver(),
                     Settings.Global.LOW_POWER_MODE, 0 /*default*/) != 0;
+            boolean shouldSwitchRefreshRate = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.LOW_POWER_REFRESH_RATE, 1 /*default*/) != 0;
             final Vote vote;
-            if (mIsLowPower) {
+            if (mIsLowPower && shouldSwitchRefreshRate) {
                 vote = Vote.forRenderFrameRates(0f, 60f);
             } else {
                 vote = null;
