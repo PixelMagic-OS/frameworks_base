@@ -1395,6 +1395,7 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
         }
 
         updateTouchHovering();
+        updateTouchPollingRate();
         updateTouchSensitivity();
 
         if (DEBUG) {
@@ -1460,6 +1461,7 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
                 mLineageHardware = LineageHardwareManager.getInstance(mContext);
 
                 updateTouchHovering();
+                updateTouchPollingRate();
                 updateTouchSensitivity();
 
                 mStatusBarManagerInternal =
@@ -2971,6 +2973,15 @@ public final class InputMethodManagerService implements IInputMethodManagerImpl.
         userData.mSwitchingController.resetCircularListLocked(mContext, settings);
         userData.mHardwareKeyboardShortcutController.update(settings);
         sendOnNavButtonFlagsChangedLocked(userData);
+    }
+
+    private void updateTouchPollingRate() {
+        if (!mLineageHardware.isSupported(LineageHardwareManager.FEATURE_HIGH_TOUCH_POLLING_RATE)) {
+            return;
+        }
+        final boolean enabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HIGH_TOUCH_POLLING_RATE_ENABLE, 0) == 1;
+        mLineageHardware.set(LineageHardwareManager.FEATURE_HIGH_TOUCH_POLLING_RATE, enabled);
     }
 
     private void updateTouchSensitivity() {
