@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.spark;
+package com.android.internal.util.pm;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -26,7 +26,7 @@ import android.os.SystemProperties;
 
 import java.util.List;
 
-public class SparkUtils {
+public class PMUtils {
 
     public static boolean isPackageInstalled(Context context, String packageName, boolean ignoreState) {
         if (packageName != null) {
