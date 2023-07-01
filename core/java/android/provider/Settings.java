@@ -6025,6 +6025,12 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String SETTINGS_DASHBOARD_STYLE = "settings_dashboard_style";
+
+        /**
+         * Volume styles
+         * @hide
+         */
         public static final String RECENTS_LOCKED_TASKS = "recents_locked_tasks";
 
         /**
