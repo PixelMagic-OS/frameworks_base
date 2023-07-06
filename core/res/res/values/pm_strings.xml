@@ -23,4 +23,9 @@
     <!-- System Reboot -->
     <string name="system_restart_title">System restart required</string>
     <string name="system_restart_message">For all the changes to take effect, a system restart is required. Perform system restart now?</string>
+    
+    <!-- PowerOffAlarmService -->
+    <string name="notification_channel_poweroff_alarm">Power off alarm</string>
+    <string name="poweroff_alarm_title">Power off alarm set</string>
+    <string name="poweroff_alarm_body">Device will power on 2 minutes before alarm</string>
 </resources>
