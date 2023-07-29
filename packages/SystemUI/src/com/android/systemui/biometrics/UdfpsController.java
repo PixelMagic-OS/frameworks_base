@@ -126,6 +126,7 @@ import kotlin.Unit;
 @SysUISingleton
 public class UdfpsController implements DozeReceiver, Dumpable {
     private static final String TAG = "UdfpsController";
+    private static final String HBM = "switch_hbm";
     private static final long AOD_SEND_FINGER_UP_DELAY_MILLIS = 1000;
 
     // Minimum required delay between consecutive touch logs in milliseconds.
@@ -902,6 +903,9 @@ public class UdfpsController implements DozeReceiver, Dumpable {
             mOnFingerDown = false;
             mAttemptedToDismissKeyguard = false;
             mOrientationListener.enable();
+            if (mFrameworkDimming) {
+                updateViewDimAmount(true);
+            }
         } else {
             Log.v(TAG, "showUdfpsOverlay | the overlay is already showing");
         }
@@ -909,6 +913,9 @@ public class UdfpsController implements DozeReceiver, Dumpable {
 
     private void hideUdfpsOverlay() {
         mExecution.assertIsMainThread();
+        if (mFrameworkDimming) {
+            Settings.System.putInt(mContext.getContentResolver(), HBM, 0);
+        }
 
         if (mOverlay != null) {
             // Reset the controller back to its starting state.
@@ -1032,22 +1039,11 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         return ya - (ya - yb) * (x - xa) / (xb - xa);
     }
 
-    private int getBrightness() {
-        int brightness = Settings.System.getInt(mContext.getContentResolver(),
-                    Settings.System.SCREEN_BRIGHTNESS, 100);
-        // Since the brightness is taken from the system settings, we need to interpolate it
-        final int brightnessMin = mContext.getResources().getInteger(R.integer.config_udfpsDimmingBrightnessMin);
-        final int brightnessMax = mContext.getResources().getInteger(R.integer.config_udfpsDimmingBrightnessMax);
-        if (brightnessMax > 0) {
-            brightness = interpolate(brightness, 0, 255, brightnessMin, brightnessMax);
-        }
-        return brightness;
-    }
-
     private void updateViewDimAmount(boolean pressed) {
         if (mFrameworkDimming) {
             if (pressed) {
-                int curBrightness = getBrightness();
+                int curBrightness = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.SCREEN_BRIGHTNESS, 100);
                 int i, dimAmount;
                 for (i = 0; i < mBrightnessAlphaArray.length; i++) {
                     if (mBrightnessAlphaArray[i][0] >= curBrightness) break;
@@ -1128,8 +1124,6 @@ public class UdfpsController implements DozeReceiver, Dumpable {
             Log.w(TAG, "Null request in onFingerDown");
             return;
         }
-
-        updateViewDimAmount(true);
 
         if (!mOverlay.matchesRequestId(requestId)) {
             Log.w(TAG, "Mismatched fingerDown: " + requestId
@@ -1249,23 +1243,6 @@ public class UdfpsController implements DozeReceiver, Dumpable {
 
         mIsAodInterruptActive = false;
 
-        // Add a delay to ensure that the dim amount is updated after the display
-        // has had chance to switch out of HBM mode.
-        // The delay, in ms is stored in config_udfpsDimmingDisableDelay.
-        // If the delay is 0, the dim amount will be updated immediately.
-        final int delay = mContext.getResources().getInteger(
-                R.integer.config_udfpsDimmingDisableDelay);
-        if (delay > 0) {
-            mFgExecutor.executeDelayed(() -> {
-                // A race condition exists where the overlay is destroyed before the the dim amount is updated.
-                // This check ensures that the overlay is still valid.
-                if (mOverlay != null && mOverlay.matchesRequestId(requestId)) {
-                    updateViewDimAmount(false);
-                }
-            }, delay);
-        } else {
-            updateViewDimAmount(false);
-        }
         cancelAodSendFingerUpAction();
     }
 

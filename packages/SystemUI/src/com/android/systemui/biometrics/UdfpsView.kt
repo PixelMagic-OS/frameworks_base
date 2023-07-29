@@ -22,15 +22,18 @@ import android.graphics.Paint
 import android.graphics.PointF
 import android.graphics.Rect
 import android.graphics.RectF
+import android.provider.Settings
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.Surface
+import android.view.View
 import android.widget.FrameLayout
 import com.android.systemui.R
 import com.android.systemui.doze.DozeReceiver
 
 private const val TAG = "UdfpsView"
+private const val HBM_SWITCH = "switch_hbm"
 
 /**
  * The main view group containing all UDFPS animations.
@@ -121,6 +124,12 @@ class UdfpsView(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         Log.v(TAG, "onAttachedToWindow")
+    }
+
+    override fun onWindowVisibilityChanged(visibility: Int) {
+        super.onWindowVisibilityChanged(visibility)
+        Log.v(TAG, "onWindowVisibilityChanged:"+visibility)
+        Settings.System.putInt(context.contentResolver,HBM_SWITCH,if (visibility==View.VISIBLE) 1 else 0)
     }
 
     override fun onDetachedFromWindow() {
