@@ -6114,4 +6114,7 @@
     <!-- Whether we should persist the brightness value in nits for the default display even if
          the underlying display device changes. -->
     <bool name="config_persistBrightnessNitsForDefaultDisplay">false</bool>
+    
+    <!-- Name of the font family to use in the default lockscreen date/smartspace -->
+    <string name="config_dateFontFamily" translatable="false">sans-serif</string>
 </resources>
