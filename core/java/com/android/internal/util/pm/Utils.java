@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.crdroid;
+package com.android.internal.util.pm;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -23,29 +23,22 @@ import android.content.pm.PackageManager;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
-
 import java.util.List;
-
 public class Utils {
-
     public static boolean isPackageInstalled(Context context, String packageName, boolean ignoreState) {
-        if (packageName != null) {
-            try {
-                PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
-                if (!pi.applicationInfo.enabled && !ignoreState) {
-                    return false;
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
-            }
+        if (packageName == null) {
+            return false;
         }
-        return true;
+        try {
+            PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
+            return pi.applicationInfo.enabled || ignoreState;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
-
     public static boolean isPackageInstalled(Context context, String packageName) {
         return isPackageInstalled(context, packageName, true);
     }
-
     public static boolean isPackageEnabled(Context context, String packageName) {
         try {
             PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
@@ -54,27 +47,23 @@ public class Utils {
             return false;
         }
     }
-
     public static void switchScreenOff(Context ctx) {
         PowerManager pm = (PowerManager) ctx.getSystemService(Context.POWER_SERVICE);
         if (pm!= null) {
             pm.goToSleep(SystemClock.uptimeMillis());
         }
     }
-
     public static boolean deviceHasFlashlight(Context ctx) {
         return ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
-
     public static boolean hasNavbarByDefault(Context context) {
-        boolean needsNav = context.getResources().getBoolean(
-                com.android.internal.R.bool.config_showNavigationBar);
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
         if ("1".equals(navBarOverride)) {
-            needsNav = false;
+            return false;
         } else if ("0".equals(navBarOverride)) {
-            needsNav = true;
+            return true;
         }
-        return needsNav;
+        return context.getResources().getBoolean(
+            com.android.internal.R.bool.config_showNavigationBar);
     }
 }
