@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.crdroid;
+package com.android.internal.util.pm;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
