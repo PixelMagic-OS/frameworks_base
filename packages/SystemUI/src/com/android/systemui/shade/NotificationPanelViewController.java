@@ -1730,7 +1730,7 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
 
     @ClockSize
     private int computeDesiredClockSizeForSingleShade() {
-        if (hasVisibleNotifications()) {
+        if (hasVisibleNotifications(true)) {
             return SMALL;
         }
         return LARGE;
@@ -1751,7 +1751,7 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
         if (!MigrateClocksToBlueprint.isEnabled()) {
             boolean bypassEnabled = mKeyguardBypassController.getBypassEnabled();
             if (mKeyguardStatusViewController.isLargeClockBlockingNotificationShelf()
-                    && hasVisibleNotifications() && (isOnAod() || bypassEnabled)) {
+                    && hasVisibleNotifications(true) && (isOnAod() || bypassEnabled)) {
                 return SMALL;
             }
         }
@@ -1828,13 +1828,22 @@ public final class NotificationPanelViewController implements ShadeSurface, Dump
     }
 
     private boolean hasVisibleNotifications() {
+        return hasVisibleNotifications(false);
+    }
+
+    private boolean hasVisibleNotifications(boolean onKeyguard) {
+        final boolean mediaOnKeyguard = !isOnAod()
+                && mMediaHierarchyManager.getShouldShowOnLockScreen();
+        final boolean isMediaVisibleToUser =
+                mMediaDataManager.hasActiveMediaOrRecommendation()
+                && (mediaOnKeyguard || !onKeyguard);
         if (FooterViewRefactor.isEnabled()) {
             return mActiveNotificationsInteractor.getAreAnyNotificationsPresentValue()
-                    || mMediaDataManager.hasActiveMediaOrRecommendation();
+                    || isMediaVisibleToUser;
         } else {
             return mNotificationStackScrollLayoutController
                     .getVisibleNotificationCount() != 0
-                    || mMediaDataManager.hasActiveMediaOrRecommendation();
+                    || isMediaVisibleToUser;
         }
     }
 
