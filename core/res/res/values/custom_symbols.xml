@@ -29,6 +29,9 @@
     <!-- Lock gesture -->
     <java-symbol type="string" name="gesture_locked_warning" />
 
+    <!-- PowerOffAlarmService -->
+    <java-symbol type="bool" name="config_powerOffAlarmEnabled" />
+
     <!-- Health interface -->
     <java-symbol type="bool" name="config_chargingControlEnabled" />
     <java-symbol type="integer" name="config_defaultChargingControlMode" />
