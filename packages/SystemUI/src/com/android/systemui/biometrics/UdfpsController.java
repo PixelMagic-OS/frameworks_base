@@ -51,6 +51,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Trace;
+import android.os.UserHandle;
 import android.os.VibrationAttributes;
 import android.os.VibrationEffect;
 import android.util.Log;
@@ -142,6 +143,7 @@ import javax.inject.Inject;
 @SysUISingleton
 public class UdfpsController implements DozeReceiver, Dumpable {
     private static final String TAG = "UdfpsController";
+    private static final String PULSE_ACTION = "com.android.systemui.doze.pulse";
     private static final long AOD_SEND_FINGER_UP_DELAY_MILLIS = 1000;
 
     private static final long MIN_UNCHANGED_INTERACTION_LOG_INTERVAL = 50;
@@ -368,8 +370,13 @@ public class UdfpsController implements DozeReceiver, Dumpable {
                     return;
                 }
                 if (vendorCode == mUdfpsVendorCode) {
-                    mPowerManager.wakeUp(mSystemClock.uptimeMillis(),
-                            PowerManager.WAKE_REASON_GESTURE, TAG);
+                    if (mContext.getResources().getBoolean(R.bool.config_pulseOnFingerDown)) {
+                        mContext.sendBroadcastAsUser(new Intent(PULSE_ACTION),
+                                new UserHandle(UserHandle.USER_CURRENT));
+                    } else {
+                        mPowerManager.wakeUp(mSystemClock.uptimeMillis(),
+                                PowerManager.WAKE_REASON_GESTURE, TAG);
+                    }
                     onAodInterrupt(0, 0, 0, 0);
                 }
             }
