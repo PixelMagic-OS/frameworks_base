@@ -877,21 +877,21 @@ public class UdfpsController implements DozeReceiver, Dumpable {
         udfpsShell.setUdfpsOverlayController(mUdfpsOverlayController);
 
         mUdfpsVendorCode = mContext.getResources().getInteger(R.integer.config_udfpsVendorCode);
-        updateUdfpsAnimation();
-        mConfigurationController.addCallback(mConfigurationListener);
+        if (com.android.internal.util.pm.Utils.isPackageInstalled(mContext,
+                "com.crdroid.udfps.animations")) {
+            updateUdfpsAnimation();
+            mConfigurationController.addCallback(mConfigurationListener);
+        }
     }
     
     private void updateUdfpsAnimation() {
-        if (com.android.internal.util.pm.Utils.isPackageInstalled(mContext,
-                "com.crdroid.udfps.animations")) {
-            if (mUdfpsAnimation != null) {
-                mUdfpsAnimation.removeAnimation();
-                mUdfpsAnimation = null;
-            }
-            mUdfpsAnimation = new UdfpsAnimation(mContext, mWindowManager, mSensorProps, mAuthController);
-            if (mUdfpsAnimation != null) {
-                mUdfpsAnimation.updatePosition();
-            }
+        if (mUdfpsAnimation != null) {
+            mUdfpsAnimation.removeAnimation();
+            mUdfpsAnimation = null;
+        }
+        mUdfpsAnimation = new UdfpsAnimation(mContext, mWindowManager, mSensorProps, mAuthController);
+        if (mUdfpsAnimation != null) {
+            mUdfpsAnimation.updatePosition();
         }
     }
 
