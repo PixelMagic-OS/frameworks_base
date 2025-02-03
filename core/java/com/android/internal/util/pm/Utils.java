@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017-2023 crDroid Android Project
+ * Copyright (C) 2017-2024 crDroid Android Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 
 package com.android.internal.util.pm;
-
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -26,15 +25,17 @@ import android.os.SystemProperties;
 import java.util.List;
 public class Utils {
     public static boolean isPackageInstalled(Context context, String packageName, boolean ignoreState) {
-        if (packageName == null) {
-            return false;
+        if (packageName != null) {
+            try {
+                PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
+                if (!pi.applicationInfo.enabled && !ignoreState) {
+                    return false;
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                return false;
+            }
         }
-        try {
-            PackageInfo pi = context.getPackageManager().getPackageInfo(packageName, 0);
-            return pi.applicationInfo.enabled || ignoreState;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
+        return true;
     }
     public static boolean isPackageInstalled(Context context, String packageName) {
         return isPackageInstalled(context, packageName, true);
@@ -57,13 +58,14 @@ public class Utils {
         return ctx.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
     }
     public static boolean hasNavbarByDefault(Context context) {
+        boolean needsNav = context.getResources().getBoolean(
+                com.android.internal.R.bool.config_showNavigationBar);
         String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
         if ("1".equals(navBarOverride)) {
-            return false;
+            needsNav = false;
         } else if ("0".equals(navBarOverride)) {
-            return true;
+            needsNav = true;
         }
-        return context.getResources().getBoolean(
-            com.android.internal.R.bool.config_showNavigationBar);
+        return needsNav;
     }
 }
