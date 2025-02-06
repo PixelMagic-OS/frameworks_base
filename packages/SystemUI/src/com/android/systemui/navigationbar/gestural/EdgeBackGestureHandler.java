@@ -55,6 +55,7 @@ import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.Trace;
 import android.provider.DeviceConfig;
+import android.provider.Settings;
 import android.util.ArraySet;
 import android.util.DisplayMetrics;
 import android.util.Log;
