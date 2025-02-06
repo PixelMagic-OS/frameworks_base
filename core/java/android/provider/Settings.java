@@ -6592,6 +6592,13 @@ public final class Settings {
         public static final String VIBRATE_ON_CALLWAITING = "vibrate_on_callwaiting";
 
         /**
+         * Whether to answer the call with the volume keys, the value is boolean.
+         * 0 = 0ff, 1 = on
+         * @hide
+         */
+        public static final String VOLUME_ANSWER_CALL = "volume_answer_call";
+
+        /**
          * Whether the phone vibrates on disconnect
          * @hide
          */
