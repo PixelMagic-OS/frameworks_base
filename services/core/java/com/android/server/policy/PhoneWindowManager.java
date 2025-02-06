@@ -5589,7 +5589,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK: {
                 boolean isLongSwipe = (event.getFlags() & KeyEvent.FLAG_LONG_SWIPE) != 0;
-                logKeyboardSystemsEventOnActionUp(event, KeyboardLogEvent.BACK);
 
                 if (mLongSwipeDown && isLongSwipe && !down) {
                     // Trigger long swipe action
