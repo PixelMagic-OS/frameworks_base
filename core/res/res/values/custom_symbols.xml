@@ -126,4 +126,9 @@
     <!-- Configuration for detecting whether an oem fast charger is active -->
     <java-symbol type="array" name="config_oemFastChargerStatusPaths" />
 
+    <!-- Long-press back kill application -->
+    <java-symbol type="anim" name="last_app_in" />
+    <java-symbol type="anim" name="last_app_out" />
+    <java-symbol type="string" name="app_killed_message" />
+
 </resources>
