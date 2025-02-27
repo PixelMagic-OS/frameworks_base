@@ -18,7 +18,7 @@
     android:shape="oval">
 
     <solid
-      android:color="@color/system_bar_background_transparent"/>
+      android:color="?androidprv:attr/colorSurface"/>
 
     <size
         android:width="64dp"
