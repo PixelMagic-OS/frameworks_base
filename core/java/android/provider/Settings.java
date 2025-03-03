@@ -6606,6 +6606,15 @@ public final class Settings {
         public static final String KEY_EDGE_LONG_SWIPE_ACTION = "key_edge_long_swipe_action";
 
         /**
+         * Action to perform when shake gesture action is detected.
+         * (See KEY_SHAKE_GESTURE_ACTION for valid values)
+         */
+        public static final String KEY_SHAKE_GESTURE_ACTION = "shake_gestures_action";
+        /** @hide */
+        public static final Validator KEY_SHAKE_GESTURE_ACTION_VALIDATOR =
+                new InclusiveIntegerRangeValidator(0, 17);
+
+        /**
          * Whether the phone vibrates on disconnect
          * @hide
          */
