@@ -193,6 +193,7 @@ import com.android.systemui.statusbar.policy.ResourcesSplitShadeStateController;
 import com.android.systemui.statusbar.policy.SplitShadeStateController;
 import com.android.systemui.statusbar.policy.data.repository.FakeUserSetupRepository;
 import com.android.systemui.statusbar.window.StatusBarWindowStateController;
+import com.android.systemui.tuner.TunerService;
 import com.android.systemui.unfold.SysUIUnfoldComponent;
 import com.android.systemui.user.domain.interactor.UserSwitcherInteractor;
 import com.android.systemui.util.kotlin.JavaAdapter;
@@ -351,6 +352,8 @@ public class NotificationPanelViewControllerBaseTest extends SysuiTestCase {
     @Mock private KeyguardClockPositionAlgorithm mKeyguardClockPositionAlgorithm;
     @Mock private NaturalScrollingSettingObserver mNaturalScrollingSettingObserver;
     @Mock private LargeScreenHeaderHelper mLargeScreenHeaderHelper;
+    @Mock private TunerService mTunerService;
+
     protected final int mMaxUdfpsBurnInOffsetY = 5;
     protected FakeFeatureFlagsClassic mFeatureFlags = new FakeFeatureFlagsClassic();
     protected KeyguardBottomAreaInteractor mKeyguardBottomAreaInteractor;
@@ -835,7 +838,8 @@ public class NotificationPanelViewControllerBaseTest extends SysuiTestCase {
                 mCastController,
                 new ResourcesSplitShadeStateController(),
                 () -> mKosmos.getCommunalTransitionViewModel(),
-                () -> mLargeScreenHeaderHelper
+                () -> mLargeScreenHeaderHelper,
+                mTunerService
         );
     }
 

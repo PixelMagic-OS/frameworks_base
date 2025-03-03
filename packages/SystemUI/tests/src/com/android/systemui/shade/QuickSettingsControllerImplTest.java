@@ -54,6 +54,7 @@ import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.qs.flags.QSComposeFragment;
 import com.android.systemui.res.R;
 import com.android.systemui.statusbar.notification.footer.shared.FooterViewRefactor;
+import com.android.systemui.tuner.TunerService;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -79,6 +80,14 @@ public class QuickSettingsControllerImplTest extends QuickSettingsControllerImpl
         super();
         mSetFlagsRule.setFlagsParameterization(flags);
     }
+
+    private QuickSettingsController mQsController;
+
+    @Mock private TunerService mTunerService;
+
+        mQsController = new QuickSettingsController(
+                mTunerService
+        );
 
     @Test
     public void testCloseQsSideEffects() {
