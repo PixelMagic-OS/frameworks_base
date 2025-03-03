@@ -6615,11 +6615,9 @@ public final class Settings {
         /**
          * Action to perform when shake gesture action is detected.
          * (See KEY_SHAKE_GESTURE_ACTION for valid values)
+         * @hide
          */
         public static final String KEY_SHAKE_GESTURE_ACTION = "shake_gestures_action";
-        /** @hide */
-        public static final Validator KEY_SHAKE_GESTURE_ACTION_VALIDATOR =
-                new InclusiveIntegerRangeValidator(0, 17);
 
         /**
          * Whether the phone vibrates on disconnect

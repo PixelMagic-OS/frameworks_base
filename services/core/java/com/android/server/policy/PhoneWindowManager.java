@@ -3268,7 +3268,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 mEdgeLongSwipeAction);
 
         mShakeGestureAction = Action.fromSettings(resolver,
-                LineageSettings.System.KEY_SHAKE_GESTURE_ACTION,
+                Settings.System.KEY_SHAKE_GESTURE_ACTION,
                 Action.NOTHING);
 
         mShortPressOnWindowBehavior = SHORT_PRESS_WINDOW_NOTHING;
